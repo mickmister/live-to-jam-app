@@ -1,4 +1,4 @@
-module.exports = (midiNote: number): number[] => {
+export default (midiNote: number): number[] => {
     return [
         midiNote,
         midiNote + 4,

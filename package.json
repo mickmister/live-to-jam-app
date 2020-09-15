@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p .",
     "watch": "tsc --watch -p ."
   },
   "author": "",
@@ -12,5 +13,10 @@
     "@types/node": "14.0.13",
     "typescript": "3.9.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "iohook": "0.6.6",
+    "rxjs": "6.5.5",
+    "scribbletune": "3.12.1",
+    "tone": "14.7.39"
+  }
 }
