@@ -1,12 +1,13 @@
 import {Note, Chord, Scale, MidiNumber, Quality, MidiIO, Logger, MidiNote} from '../types/model-interfaces';
-import ChordProcessor, {cycle, SORTED_PITCHES} from './chord-processor';
+// import ChordProcessor, {cycle, SORTED_PITCHES} from './chord-processor';
 
 import chords from './chord';
+import {cycle, getAllOffMidiNotes, noteFromNumber} from '../utils/midi-utils';
+import ScribbleChordGenerator from '../chord-generators/scribble-chord-generator';
 
 export default class Master {
     private midiIO: MidiIO;
     private logger: Logger;
-    private chordProcessor: ChordProcessor;
 
     private scaleRoot: MidiNumber;
     private scaleQuality: Quality;
@@ -14,7 +15,6 @@ export default class Master {
     constructor(midiIO: MidiIO, logger: Logger) {
         this.midiIO = midiIO;
         this.logger = logger;
-        this.chordProcessor = new ChordProcessor(logger);
 
         this.scaleRoot = 50;
         this.scaleQuality = Quality.MAJOR;
@@ -29,38 +29,22 @@ export default class Master {
     }
 
     private playChordFromMidiNumber = (midiNumber: MidiNumber) => {
-        const root = this.chordProcessor.noteFromNumber(this.scaleRoot);
+        const root = noteFromNumber(this.scaleRoot);
         const scale: Scale = {
             root,
             quality: this.scaleQuality,
         }
 
-        debugger;
+        const note = noteFromNumber(midiNumber);
 
-        const note = this.chordProcessor.noteFromNumber(midiNumber);
+        const gen = new ScribbleChordGenerator();
+        const chord = gen.generateMajorChord(note.name);
 
-        this.midiIO.sendMidi(getAllOffMidiNotes());
+        this.logger.log(JSON.stringify(chord));
 
-        let toPlay: MidiNote[] = [];
-        const inversion = this.chordProcessor.getRootModeChord(scale, note, 3);
-        this.logger.log(JSON.stringify(scale));
-        this.logger.log(JSON.stringify(note));
-
-        if (inversion) {
-            // this.logger.log(inversion.notes[0].number.toString());
-            toPlay = inversion.notes.map((n) => ({
-                note: n.number,
-                velocity: 100,
-            }));
-        } else {
-            this.logger.log('no root mode chord found');
-            const chord = chords(midiNumber);
-            toPlay = chord.map(note => ({note, velocity: 100}));
+        if (chord) {
+            this.midiIO.sendMidi(chord.midiNotes);
         }
-
-        this.logger.log(JSON.stringify(toPlay));
-
-        this.midiIO.sendMidi(toPlay);
     }
 
     setScaleRoot = (midiNumber: MidiNumber) => {
@@ -69,21 +53,10 @@ export default class Master {
 
     // Out of convenience for midi communication, C is major and everything else is minor
     setScaleQuality = (midiNumber: MidiNumber) => {
-        if (cycle(midiNumber) === 12) {
+        if (cycle(midiNumber) === 0) {
             this.scaleQuality = Quality.MAJOR;
         } else {
             this.scaleQuality = Quality.MINOR;
         }
     }
-}
-
-const getAllOffMidiNotes = () => {
-    const result: MidiNote[] = [];
-    for (let i=0; i < 128; i++) {
-        result.push({
-            note: i + 1,
-            velocity: 0,
-        });
-    }
-    return result;
 }

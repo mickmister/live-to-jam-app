@@ -1,27 +1,53 @@
 import {Subject} from 'rxjs';
+
+import { note, interval } from '@tonaljs/core';
+
 import {MidiNote} from '../types/model-interfaces';
 
 import {onKeyPress} from '../utils/node-keyboard-input';
+import {getAllOffMidiNotes} from '../utils/midi-utils';
 
 const scribble = require('scribbletune');
 
+const Server = require('socket.io');
+
+import ScribbleChordGenerator from '../chord-generators/scribble-chord-generator';
+
 export default class NodeIO {
     private midiInObservable = new Subject<MidiNote>();
+    private io: typeof Server;
+    private chordGenerator: ScribbleChordGenerator;
+
     constructor() {
-        // whenever keystrokes are done in console
-        // () => {
-                // this.midiInObservable.next({note, velocity});
-        // }
+        this.chordGenerator = new ScribbleChordGenerator();
+
+        setTimeout(() => {
+            this.io = new Server(3000, {
+                // path: '/test',
+                serveClient: false,
+                // below are engine.IO options
+                pingInterval: 10000,
+                pingTimeout: 5000,
+                cookie: false,
+            });
+
+            this.io.on('connection', function (socket: any) {
+                console.log('socketid',socket.id,'connected');
+                socket.on('msg', (data: any) => {
+                });
+                socket.on('disconnect', function () {
+                    console.log(socket.id + ' disconnect');
+                });
+            });
+        }, 0);
 
         onKeyPress(key => {
-            const chord = scribble.chord(key.name.toUpperCase() + 'M');
-            console.log(chord);
-        });
+            const chord = this.chordGenerator.generateMajorChord(key.name.toUpperCase());
 
-        // const c = scribble.clip({
-        //     pattern: 'xxxx', // or just x since we dont have any variation
-        // });
-        // scribble.midi(c);
+            if (chord) {
+                this.midiInObservable.next(chord.midiNotes[0]);
+            }
+        });
     }
 
     onMidiIn = (callback: (midiNote: MidiNote) => void) => {
@@ -29,9 +55,12 @@ export default class NodeIO {
     }
 
     sendMidi = (midiNotes: MidiNote[]) => {
-        for (const midiNote of midiNotes) {
-            console.log(midiNote);
-        }
+        this.io.emit('notes', midiNotes);
+    }
+
+    releaseAllKeys() {
+        const msg = {type: 'release-keys'};
+        this.io.emit(JSON.stringify(msg));
     }
 
     log = (message: string) => {

@@ -5,9 +5,7 @@ export interface Note {
 }
 
 export interface Chord {
-  name: string
   notes: Note[]
-  midiNotes: MidiNote[]
 }
 
 export interface Scale {
@@ -24,27 +22,12 @@ export interface NoteCollection {
 }
 
 export type MidiNumber = number
-export type MidiNumberMod = number
-
-export const noteToMidiNumber = (note: Note) => {
-  return note.number
-}
-
-export enum Quality {
-  MAJOR = 'Major',
-  MINOR = 'Minor',
-};
 
 export type MidiNote = {
   note: number;
   velocity: number;
 }
 
-export interface MidiIO {
-  onMidiIn(callback: (note: MidiNote) => void): void;
-  sendMidi(midiNotes: MidiNote[]): void;
-}
-
-export interface Logger {
-  log(message: string): void;
+export const noteToMidiNumber = (note: Note) => {
+  return note.number
 }
