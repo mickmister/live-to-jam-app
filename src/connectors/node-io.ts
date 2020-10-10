@@ -20,26 +20,26 @@ export default class NodeIO {
 
     constructor() {
         this.chordGenerator = new ScribbleChordGenerator();
+    }
 
-        setTimeout(() => {
-            this.io = new Server(3000, {
-                // path: '/test',
-                serveClient: false,
-                // below are engine.IO options
-                pingInterval: 10000,
-                pingTimeout: 5000,
-                cookie: false,
-            });
+    listen = () => {
+        this.io = new Server(3000, {
+            // path: '/test',
+            serveClient: false,
+            // below are engine.IO options
+            pingInterval: 10000,
+            pingTimeout: 5000,
+            cookie: false,
+        });
 
-            this.io.on('connection', function (socket: any) {
-                console.log('socketid',socket.id,'connected');
-                socket.on('msg', (data: any) => {
-                });
-                socket.on('disconnect', function () {
-                    console.log(socket.id + ' disconnect');
-                });
+        this.io.on('connection', function (socket: any) {
+            console.log('socketid',socket.id,'connected');
+            socket.on('msg', (data: any) => {
             });
-        }, 0);
+            socket.on('disconnect', function () {
+                console.log(socket.id + ' disconnect');
+            });
+        });
 
         onKeyPress(key => {
             const chord = this.chordGenerator.generateMajorChord(key.name.toUpperCase());
