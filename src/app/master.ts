@@ -43,6 +43,8 @@ export default class Master {
         this.logger.log(JSON.stringify(chord));
 
         if (chord) {
+            const midiOffNotes = getAllOffMidiNotes();
+            this.midiIO.sendMidi(midiOffNotes);
             this.midiIO.sendMidi(chord.midiNotes);
         }
     }
