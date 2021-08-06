@@ -25,6 +25,6 @@ Open the Max Console by clicking the button highlighted blue in this picture:
 
 After running `npm run watch`, Ableton will re-run your script every time you change something in your Typescript code.
 
-[src/max-index.tsx](src/max-index.tsx) is the entry point used for Ableton, while [src/node-index.tsx](src/node-index.tsx) is an alternate entry point to run node from your command line. This is useful when testing things that doesn't rely on Ableton. Run the node program outside of Ableton by running `node dist/node-index.js`.
+[src/max-index.tsx](src/max-index.tsx) is the entry point used for Ableton, while [src/node-index.tsx](src/node-index.tsx) is an alternate entry point to run node from your command line. This is useful when testing things that doesn't rely on Ableton. Run the node program outside of Ableton by running `node max-device/node-index.js`.
 
 Edit [src/app/master.ts](src/app/master.ts) to change the functionality of the device. You can log to the console using `this.logger.log()`. Anything you log should show in the Max Console, or the command line console if you are running the script yourself as `node-index.js`.
