@@ -28,3 +28,18 @@ After running `npm run watch`, Ableton will re-run your script every time you ch
 [src/max-index.tsx](src/max-index.tsx) is the entry point used for Ableton, while [src/node-index.tsx](src/node-index.tsx) is an alternate entry point to run node from your command line. This is useful when testing things that doesn't rely on Ableton. Run the node program outside of Ableton by running `node max-device/node-index.js`.
 
 Edit [src/app/master.ts](src/app/master.ts) to change the functionality of the device. You can log to the console using `this.logger.log()`. Anything you log should show in the Max Console, or the command line console if you are running the script yourself as `node-index.js`.
+
+## Using the web application
+
+Currently the `node-index` file is set up to communicate to the browser over websockets. After building your project with `npm run build`, run `node max-device/node-index.js` to start the websocket server.
+
+In the `webapp` directory, run:
+
+- `npm install`
+- `npm start`
+
+Then go to http://localhost:1234 in your browser. Then click "Start" to turn on the in-browser synthesizer.
+
+Go back to the terminal that is running `node-index.js`. With this terminal in focus, you should be able to use your computer keyboard as a chord generator. For example, pressing the C key should play C major. When you press keys with the terminal in focus, the node process picks up your key strokes, converts them into chords, and sends the chords to the browser over websockets. The browser then plays the notes using a library called SoundFont.
+
+This is a proof of concept where the max process would be able to communicate to the browser in a similar manner. Running the node code directly in your terminal allows for quicker iterations of development, because it doesn't rely on Ableton to be running or any of Ableton's state.
