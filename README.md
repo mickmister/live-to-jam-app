@@ -1,5 +1,9 @@
 # Ableton Max for Live - Typescript Project
 
+## Overview
+
+This project serves as a small boilerplate for [Node for Max](https://docs.cycling74.com/nodeformax/api) Typescript projects. See https://youtube.com/watch?v=qSZH6fjOcXE https://youtube.com/watch?v=QuIcEHJSwz8 for an introduction to Node for Max.
+
 ## Getting started
 
 - Clone this repo
