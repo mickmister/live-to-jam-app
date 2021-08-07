@@ -2,7 +2,9 @@
 
 ## Overview
 
-This project serves as a small boilerplate for [Node for Max](https://docs.cycling74.com/nodeformax/api) Typescript projects. See https://youtube.com/watch?v=qSZH6fjOcXE https://youtube.com/watch?v=QuIcEHJSwz8 for an introduction to Node for Max.
+This project serves as a small boilerplate for [Node for Max](https://docs.cycling74.com/nodeformax/api) Typescript projects. See these videos for an introduction to Node for Max:
+- [Node for Max: An Introduction](https://youtube.com/watch?v=qSZH6fjOcXE)
+- [Node for Max: Getting Started](https://youtube.com/watch?v=QuIcEHJSwz8)
 
 ## Getting started
 
